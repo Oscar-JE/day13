@@ -22,7 +22,13 @@ func initNumber(number int) InputRep {
 	return InputRep{false, false, number}
 }
 
-func pairsInOrder(first string, second string) bool {
+func PairsInOrder(first string, second string) bool {
+	a := parseToInputRep(first)
+	b := parseToInputRep(second)
+	return inOrder(a, b)
+}
+
+func inOrder(first []InputRep, second []InputRep) bool {
 	return false
 }
 
