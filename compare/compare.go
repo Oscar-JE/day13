@@ -66,3 +66,10 @@ func parseToInputRep(line string) []InputRep {
 	}
 	return retValue
 }
+
+func divideIntoElements(sequence []InputRep) [][]InputRep {
+	if equal(sequence[0], initLeft()) && equal(sequence[len(sequence)-1], initRight()) {
+		sequence = sequence[1 : len(sequence)-1]
+	}
+	if 
+}
