@@ -71,5 +71,30 @@ func divideIntoElements(sequence []InputRep) [][]InputRep {
 	if equal(sequence[0], initLeft()) && equal(sequence[len(sequence)-1], initRight()) {
 		sequence = sequence[1 : len(sequence)-1]
 	}
-	if 
+	elements := [][]InputRep{}
+	buffer := []InputRep{}
+	bracketLevel := 0
+	for i := range sequence {
+		if equal(sequence[i], initLeft()) {
+			bracketLevel++
+		}
+		if equal(sequence[i], initLeft()) {
+			bracketLevel--
+			if bracketLevel < 0 {
+				panic("inposible bracketLevel")
+			}
+		}
+		if bracketLevel > 0 {
+			buffer = append(buffer, sequence[i])
+		} else {
+			if len(buffer) != 0 {
+				buffer = append(buffer, sequence[i])
+				elements = append(elements, buffer)
+				buffer = []InputRep{}
+			} else {
+				elements = append(elements, []InputRep{sequence[i]})
+			}
+		}
+	}
+	return elements
 }
