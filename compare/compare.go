@@ -37,34 +37,34 @@ func equal(a InputRep, b InputRep) bool {
 }
 
 func parseToInputRep(line string) []InputRep {
-	retValue := []InputRep{}
+	representation := []InputRep{}
 	numberBuffer := ""
 	for index := range line {
 		if line[index] == '[' {
-			retValue = append(retValue, initLeft())
+			representation = append(representation, initLeft())
 		} else if line[index] == ']' {
 			if numberBuffer != "" {
 				value, errorConv := strconv.Atoi(numberBuffer)
 				if errorConv != nil {
 					panic("parsing error")
 				}
-				retValue = append(retValue, initNumber(value))
+				representation = append(representation, initNumber(value))
 			}
-			retValue = append(retValue, initRight())
+			representation = append(representation, initRight())
 		} else if line[index] == ',' {
 			if numberBuffer != "" {
 				value, errorConv := strconv.Atoi(numberBuffer)
 				if errorConv != nil {
 					panic("parsing error")
 				}
-				retValue = append(retValue, initNumber(value))
+				representation = append(representation, initNumber(value))
 				numberBuffer = ""
 			}
 		} else {
 			numberBuffer += string(line[index])
 		}
 	}
-	return retValue
+	return representation
 }
 
 func divideIntoElements(sequence []InputRep) [][]InputRep {

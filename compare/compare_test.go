@@ -94,6 +94,31 @@ func TestComplexParseToInputRep(t *testing.T) {
 	}
 }
 
+func TestDivideIntoElementsSimple(t *testing.T){
+	input := parseToInputRep("[1,2]")
+	a := []InputRep{initNumber(1)}
+	b := []InputRep{initNumber(2)}
+	expected := [][]InputRep{ 
+		a,
+		b,
+	}
+	actual := divideIntoElements(input)
+	if !sliceSliceEqual(actual, expected) {
+		t.Errorf("Error devide into elements")
+	}
+}
+
+func sliceSliceEqual(a [][]InputRep , b [][]InputRep ) bool{
+	if len(a) != len(b) {
+		return false
+	}
+	equal := true
+	for index := range a {
+		equal = equal && sliceEqual(a[index],b[index])
+	} 
+	return equal
+}
+
 func sliceEqual(vec1 []InputRep, vec2 []InputRep) bool {
 	isEqual := true
 	maxLen := max(len(vec1), len(vec2))
