@@ -9,9 +9,9 @@ import (
 func main() {
 	inputs := parse.Parse("input_short.txt")
 	sum := 0
-	for _, firstAndSecond := range inputs {
+	for index, firstAndSecond := range inputs {
 		if compare.PairsInOrder(firstAndSecond[0], firstAndSecond[1]) {
-			sum++
+			sum += index + 1
 		}
 	}
 	fmt.Println(sum)

@@ -5,7 +5,7 @@ import (
 )
 
 func TestCompare1(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[1,1,3,1,1]"
 	b := "[1,1,5,1,1]"
 	if !PairsInOrder(a, b) {
@@ -14,7 +14,7 @@ func TestCompare1(t *testing.T) {
 }
 
 func TestCompare2(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[[1],[2,3,4]]"
 	b := "[[1],4]"
 	if !PairsInOrder(a, b) {
@@ -23,7 +23,7 @@ func TestCompare2(t *testing.T) {
 }
 
 func TestCompare3(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[9]"
 	b := "[[8,7,6]]"
 	if PairsInOrder(a, b) {
@@ -32,7 +32,7 @@ func TestCompare3(t *testing.T) {
 }
 
 func TestCompare4(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[[4,4],4,4]"
 	b := "[[4,4],4,4,4]"
 	if !PairsInOrder(a, b) {
@@ -41,7 +41,7 @@ func TestCompare4(t *testing.T) {
 }
 
 func TestCompare5(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[7,7,7,7]"
 	b := "[7,7,7]"
 	if PairsInOrder(a, b) {
@@ -50,7 +50,7 @@ func TestCompare5(t *testing.T) {
 }
 
 func TestCompare6(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[]"
 	b := "[3]"
 	if !PairsInOrder(a, b) {
@@ -59,7 +59,7 @@ func TestCompare6(t *testing.T) {
 }
 
 func TestCompare7(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[[[]]]"
 	b := "[[]]"
 	if PairsInOrder(a, b) {
@@ -68,7 +68,7 @@ func TestCompare7(t *testing.T) {
 }
 
 func TestCompare8(t *testing.T) {
-	t.Skip("not implemented")
+	//t.Skip("not implemented")
 	a := "[1,[2,[3,[4,[5,6,7]]]],8,9]"
 	b := "[1,[2,[3,[4,[5,6,0]]]],8,9]"
 	if PairsInOrder(a, b) {
@@ -94,11 +94,11 @@ func TestComplexParseToInputRep(t *testing.T) {
 	}
 }
 
-func TestDivideIntoElementsSimple(t *testing.T){
+func TestDivideIntoElementsSimple(t *testing.T) {
 	input := parseToInputRep("[1,2]")
 	a := []InputRep{initNumber(1)}
 	b := []InputRep{initNumber(2)}
-	expected := [][]InputRep{ 
+	expected := [][]InputRep{
 		a,
 		b,
 	}
@@ -108,14 +108,26 @@ func TestDivideIntoElementsSimple(t *testing.T){
 	}
 }
 
-func sliceSliceEqual(a [][]InputRep , b [][]InputRep ) bool{
+func TestDivideIntoElementsComplex(t *testing.T) {
+	input := parseToInputRep("[[1,2,3],[2,[4,5,6]]]")
+	a := parseToInputRep("[1,2,3]")
+	b := parseToInputRep("[2,[4,5,6]]")
+	expexted := [][]InputRep{}
+	expexted = append(expexted, a, b)
+	actual := divideIntoElements(input)
+	if actual[0][3] != expexted[0][3] && actual[1][3] != expexted[1][3] {
+		t.Errorf("error in Devide into elements complex")
+	}
+}
+
+func sliceSliceEqual(a [][]InputRep, b [][]InputRep) bool {
 	if len(a) != len(b) {
 		return false
 	}
 	equal := true
 	for index := range a {
-		equal = equal && sliceEqual(a[index],b[index])
-	} 
+		equal = equal && sliceEqual(a[index], b[index])
+	}
 	return equal
 }
 
