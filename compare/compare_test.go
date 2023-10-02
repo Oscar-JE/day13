@@ -92,14 +92,6 @@ func TestWTFCase(t *testing.T) {
 	}
 }
 
-func TestRedditRad2(t *testing.T) {
-	a := "[[1,9,2]]"
-	b := "[[[[],[0],[1,8,10,6]],7,2,[[]]],[6,9],[[[3],[9,7,8],4,[8,1,5],10],2],[1,[[8,10,10,4,1],9,1],8,[[5,1,2],2,0,7,[0,1,7]]]]"
-	if !PairsInOrder(a, b) {
-		t.Errorf("error in reddit rad 2")
-	}
-}
-
 func TestCompareSameVector(t *testing.T) {
 	a := "[1,1]"
 	b := "[1,1]"

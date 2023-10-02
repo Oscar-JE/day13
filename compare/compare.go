@@ -34,49 +34,122 @@ func initNumber(number int) InputRep {
 	return InputRep{false, false, number}
 }
 
-func PairsInOrder(first string, second string) bool {
-	a := parseToInputRep(first)
-	b := parseToInputRep(second)
-	return inOrder(a, b)
+func equal(a InputRep, b InputRep) bool {
+	return a.isLeft == b.isLeft && a.isRight == b.isRight && a.value == b.value
 }
 
-func inOrder(first []InputRep, second []InputRep) bool {
-	if len(second) == 0 {
-		if len(first) == 0 {
+type Element struct {
+	symbols []InputRep
+}
+
+func InitElement(symbols []InputRep) Element {
+	return Element{symbols: symbols}
+}
+
+func (e Element) isEmpty() bool {
+	return len(e.symbols) == 0
+}
+
+func (e Element) isNumber() bool {
+	return len(e.symbols) == 1 && e.symbols[0].IsNumer()
+}
+
+func (e Element) NumberCompare(other Element) bool {
+	return e.symbols[0].value <= other.symbols[0].value
+}
+
+func (e Element) isList() bool {
+	return equal(e.symbols[0], initLeft()) && equal(e.symbols[len(e.symbols)-1], initRight())
+}
+
+func (e *Element) upgradeToList() {
+	e.symbols = append(e.symbols, initRight())
+	e.symbols = append([]InputRep{initLeft()}, e.symbols...)
+}
+
+func (e Element) divideIntoElements() []Element {
+	if equal(e.symbols[0], initLeft()) && equal(e.symbols[len(e.symbols)-1], initRight()) {
+		e.symbols = e.symbols[1 : len(e.symbols)-1]
+	}
+	elements := []Element{}
+	buffer := []InputRep{}
+	bracketLevel := 0
+	for i := range e.symbols {
+		if equal(e.symbols[i], initLeft()) {
+			bracketLevel++
+		}
+		if equal(e.symbols[i], initRight()) {
+			bracketLevel--
+			if bracketLevel < 0 {
+				panic("inposible bracketLevel")
+			}
+		}
+		if bracketLevel > 0 {
+			buffer = append(buffer, e.symbols[i])
+		} else {
+			if len(buffer) != 0 {
+				buffer = append(buffer, e.symbols[i])
+				newElement := InitElement(buffer)
+				elements = append(elements, newElement)
+				buffer = []InputRep{}
+			} else {
+				elements = append(elements, InitElement([]InputRep{e.symbols[i]}))
+			}
+		}
+	}
+	return elements
+}
+
+func PairsInOrder(first string, second string) bool {
+	symbolsFirst := parseToInputRep(first)
+	symbolsSecond := parseToInputRep(second)
+	firstElement := InitElement(symbolsFirst)
+	secondElement := InitElement(symbolsSecond)
+	return inOrder(firstElement, secondElement)
+}
+
+func inOrder(first Element, second Element) bool {
+	if second.isEmpty() {
+		if first.isEmpty() {
 			return true
 		} else {
 			return false
 		}
 	}
-	if len(first) == 0 {
-		if len(second) == 0 {
+	if first.isEmpty() {
+		if second.isEmpty() {
 			return true
 		} else {
 			return true
 		}
 	}
-	if len(second) == 1 && len(first) == 1 {
-		if second[0].IsNumer() && first[0].IsNumer() {
-			return first[0].value <= second[0].value
-		}
+	if first.isNumber() && second.isNumber() {
+		return first.NumberCompare(second)
 	}
-	elemensFirst := divideIntoElements(first)
-	elementsSecond := divideIntoElements(second)
 
-	for i := 0; i < min(len(elemensFirst), len(elementsSecond)); i++ {
-		e1 := elemensFirst[i]
-		e2 := elementsSecond[i]
+	if first.isList() && second.isNumber() {
+		second.upgradeToList()
+		return inOrder(first, second)
+	}
+
+	if first.isNumber() && second.isList() {
+		first.upgradeToList()
+		return inOrder(first, second)
+	}
+
+	subElemensFirst := first.divideIntoElements()
+	subElementsSecond := second.divideIntoElements()
+
+	for i := 0; i < min(len(subElemensFirst), len(subElementsSecond)); i++ {
+		e1 := subElemensFirst[i]
+		e2 := subElementsSecond[i]
 		if inOrder(e1, e2) && !inOrder(e2, e1) {
 			return true
 		} else if inOrder(e2, e1) && !inOrder(e1, e2) {
 			return false
 		}
 	}
-	return len(elemensFirst) <= len(elementsSecond)
-}
-
-func equal(a InputRep, b InputRep) bool {
-	return a.isLeft == b.isLeft && a.isRight == b.isRight && a.value == b.value
+	return len(subElemensFirst) <= len(subElementsSecond)
 }
 
 func parseToInputRep(line string) []InputRep {
@@ -109,38 +182,6 @@ func parseToInputRep(line string) []InputRep {
 		}
 	}
 	return representation
-}
-
-func divideIntoElements(sequence []InputRep) [][]InputRep {
-	if equal(sequence[0], initLeft()) && equal(sequence[len(sequence)-1], initRight()) {
-		sequence = sequence[1 : len(sequence)-1]
-	}
-	elements := [][]InputRep{}
-	buffer := []InputRep{}
-	bracketLevel := 0
-	for i := range sequence {
-		if equal(sequence[i], initLeft()) {
-			bracketLevel++
-		}
-		if equal(sequence[i], initRight()) {
-			bracketLevel--
-			if bracketLevel < 0 {
-				panic("inposible bracketLevel")
-			}
-		}
-		if bracketLevel > 0 {
-			buffer = append(buffer, sequence[i])
-		} else {
-			if len(buffer) != 0 {
-				buffer = append(buffer, sequence[i])
-				elements = append(elements, buffer)
-				buffer = []InputRep{}
-			} else {
-				elements = append(elements, []InputRep{sequence[i]})
-			}
-		}
-	}
-	return elements
 }
 
 func min(a int, b int) int {
