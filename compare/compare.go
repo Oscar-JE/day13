@@ -100,6 +100,17 @@ func (e Element) divideIntoElements() []Element {
 	return elements
 }
 
+func (e Element) Equal(other Element) bool {
+	isEqual := true
+	if len(e.symbols) != len(other.symbols) {
+		return false
+	}
+	for i := 0; i < len(e.symbols); i++ {
+		isEqual = isEqual && equal(e.symbols[i], other.symbols[i])
+	}
+	return isEqual
+}
+
 func PairsInOrder(first string, second string) bool {
 	symbolsFirst := parseToInputRep(first)
 	symbolsSecond := parseToInputRep(second)

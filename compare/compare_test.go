@@ -120,14 +120,17 @@ func TestComplexParseToInputRep(t *testing.T) {
 
 func TestDivideIntoElementsSimple(t *testing.T) {
 	input := parseToInputRep("[1,2]")
+	inputElement := InitElement(input)
 	a := []InputRep{initNumber(1)}
 	b := []InputRep{initNumber(2)}
-	expected := [][]InputRep{
-		a,
-		b,
+	elementA := InitElement(a)
+	elementB := InitElement(b)
+	expected := []Element{
+		elementA,
+		elementB,
 	}
-	actual := divideIntoElements(input)
-	if !sliceSliceEqual(actual, expected) {
+	actual := inputElement.divideIntoElements()
+	if !sliceElementEqual(actual, expected) {
 		t.Errorf("Error devide into elements")
 	}
 }
@@ -136,30 +139,34 @@ func TestDivideIntoElementsComplex(t *testing.T) {
 	input := parseToInputRep("[[1,2,3],[2,[4,5,6]]]")
 	a := parseToInputRep("[1,2,3]")
 	b := parseToInputRep("[2,[4,5,6]]")
-	expexted := [][]InputRep{}
-	expexted = append(expexted, a, b)
-	actual := divideIntoElements(input)
-	if actual[0][3] != expexted[0][3] && actual[1][3] != expexted[1][3] {
-		t.Errorf("error in Devide into elements complex")
+	expected := []Element{}
+	inA := InitElement(a)
+	inB := InitElement(b)
+	inputElement := InitElement(input)
+	expected = append(expected, inA, inB)
+	actual := inputElement.divideIntoElements()
+	if !sliceElementEqual(expected,actual) {
+		t.Errorf("error in Divide into elements complex")
 	}
 }
 
-func sliceSliceEqual(a [][]InputRep, b [][]InputRep) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	equal := true
-	for index := range a {
-		equal = equal && sliceEqual(a[index], b[index])
-	}
-	return equal
-}
 
 func sliceEqual(vec1 []InputRep, vec2 []InputRep) bool {
 	isEqual := true
 	maxLen := max(len(vec1), len(vec2))
 	for i := 0; i < maxLen; i++ {
 		isEqual = isEqual && equal(vec1[i], vec2[i])
+	}
+	return isEqual
+}
+
+func sliceElementEqual(vec1 []Element, vec2 []Element) bool{
+	isEqual := true
+	if len(vec1) != len(vec2) {
+		return false
+	}
+	for i := 0; i < len(vec1); i++ {
+		isEqual = isEqual && vec1[i].Equal(vec2[i])
 	}
 	return isEqual
 }
