@@ -1,50 +1,47 @@
 package compare
 
 import (
-	"strconv"
-	"day13/compare/inputrep"
+	"day13/compare/element"
 )
 
 
 func PairsInOrder(first string, second string) bool {
-	symbolsFirst := parseToInputRep(first)
-	symbolsSecond := parseToInputRep(second)
-	firstElement := InitElement(symbolsFirst)
-	secondElement := InitElement(symbolsSecond)
+	firstElement := element.Init(first)
+	secondElement := element.Init(second)
 	return inOrder(firstElement, secondElement)
 }
 
-func inOrder(first Element, second Element) bool {
-	if second.isEmpty() {
-		if first.isEmpty() {
+func inOrder(first element.Element , second element.Element) bool {
+	if second.IsEmpty() {
+		if first.IsEmpty() {
 			return true
 		} else {
 			return false
 		}
 	}
-	if first.isEmpty() {
-		if second.isEmpty() {
+	if first.IsEmpty() {
+		if second.IsEmpty() {
 			return true
 		} else {
 			return true
 		}
 	}
-	if first.isNumber() && second.isNumber() {
+	if first.IsNumber() && second.IsNumber() {
 		return first.NumberCompare(second)
 	}
 
-	if first.isList() && second.isNumber() {
-		second.upgradeToList()
+	if first.IsList() && second.IsNumber() {
+		second.UpgradeToList()
 		return inOrder(first, second)
 	}
 
-	if first.isNumber() && second.isList() {
-		first.upgradeToList()
+	if first.IsNumber() && second.IsList() {
+		first.UpgradeToList()
 		return inOrder(first, second)
 	}
 
-	subElemensFirst := first.divideIntoElements()
-	subElementsSecond := second.divideIntoElements()
+	subElemensFirst := first.DivideIntoElements()
+	subElementsSecond := second.DivideIntoElements()
 
 	for i := 0; i < min(len(subElemensFirst), len(subElementsSecond)); i++ {
 		e1 := subElemensFirst[i]
@@ -56,38 +53,6 @@ func inOrder(first Element, second Element) bool {
 		}
 	}
 	return len(subElemensFirst) <= len(subElementsSecond)
-}
-
-func parseToInputRep(line string) []InputRep {
-	representation := []InputRep{}
-	numberBuffer := ""
-	for index := range line {
-		if line[index] == '[' {
-			representation = append(representation, initLeft())
-		} else if line[index] == ']' {
-			if numberBuffer != "" {
-				value, errorConv := strconv.Atoi(numberBuffer)
-				if errorConv != nil {
-					panic("parsing error")
-				}
-				representation = append(representation, initNumber(value))
-				numberBuffer = ""
-			}
-			representation = append(representation, initRight())
-		} else if line[index] == ',' {
-			if numberBuffer != "" {
-				value, errorConv := strconv.Atoi(numberBuffer)
-				if errorConv != nil {
-					panic("parsing error")
-				}
-				representation = append(representation, initNumber(value))
-				numberBuffer = ""
-			}
-		} else {
-			numberBuffer += string(line[index])
-		}
-	}
-	return representation
 }
 
 func min(a int, b int) int {

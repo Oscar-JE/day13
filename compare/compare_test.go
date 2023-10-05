@@ -100,63 +100,11 @@ func TestCompareSameVector(t *testing.T) {
 	}
 }
 
-func TestParseToInputRep(t *testing.T) {
-	a := "[1,12]"
-	res := parseToInputRep(a)
-	expected := []InputRep{initLeft(), initNumber(1), initNumber(12), initRight()}
-	if !sliceEqual(res, expected) {
-		t.Errorf("error in simple conversion to InputRep")
-	}
-}
-
-func TestComplexParseToInputRep(t *testing.T) {
-	a := "[1,[2,[],23]"
-	expected := []InputRep{initLeft(), initNumber(1), initLeft(), initNumber(2), initLeft(), initRight(), initNumber(23), initRight()}
-	res := parseToInputRep(a)
-	if !sliceEqual(expected, res) {
-		t.Errorf("error in complex conversion to InputRep")
-	}
-}
-
-func TestDivideIntoElementsSimple(t *testing.T) {
-	input := parseToInputRep("[1,2]")
-	inputElement := InitElement(input)
-	a := []InputRep{initNumber(1)}
-	b := []InputRep{initNumber(2)}
-	elementA := InitElement(a)
-	elementB := InitElement(b)
-	expected := []Element{
-		elementA,
-		elementB,
-	}
-	actual := inputElement.divideIntoElements()
-	if !sliceElementEqual(actual, expected) {
-		t.Errorf("Error devide into elements")
-	}
-}
 
 
 
 
-func sliceEqual(vec1 []InputRep, vec2 []InputRep) bool {
-	isEqual := true
-	maxLen := max(len(vec1), len(vec2))
-	for i := 0; i < maxLen; i++ {
-		isEqual = isEqual && equal(vec1[i], vec2[i])
-	}
-	return isEqual
-}
 
-func sliceElementEqual(vec1 []Element, vec2 []Element) bool{
-	isEqual := true
-	if len(vec1) != len(vec2) {
-		return false
-	}
-	for i := 0; i < len(vec1); i++ {
-		isEqual = isEqual && vec1[i].Equal(vec2[i])
-	}
-	return isEqual
-}
 
 func max(a int, b int) int {
 	if a < b {

@@ -12,11 +12,16 @@ func InitElement(symbols []inputrep.InputRep) Element {
 	return Element{symbols: symbols}
 }
 
-func (e Element) isEmpty() bool {
+func Init(symbols string) Element {
+	parsedSymbols := inputrep.ParseToInputRep(symbols)
+	return InitElement(parsedSymbols)
+}
+
+func (e Element) IsEmpty() bool {
 	return len(e.symbols) == 0
 }
 
-func (e Element) isNumber() bool {
+func (e Element) IsNumber() bool {
 	return len(e.symbols) == 1 && e.symbols[0].IsNumer()
 }
 
@@ -24,16 +29,16 @@ func (e Element) NumberCompare(other Element) bool {
 	return e.symbols[0].GetValue() <= other.symbols[0].GetValue()
 }
 
-func (e Element) isList() bool {
+func (e Element) IsList() bool {
 	return e.symbols[0].Equal(inputrep.InitLeft()) && e.symbols[len(e.symbols)-1].Equal(inputrep.InitRight())
 }
 
-func (e *Element) upgradeToList() {
+func (e *Element) UpgradeToList() {
 	e.symbols = append(e.symbols, inputrep.InitRight())
 	e.symbols = append([]inputrep.InputRep{inputrep.InitLeft()}, e.symbols...)
 }
 
-func (e Element) divideIntoElements() []Element {
+func (e Element) DivideIntoElements() []Element {
 	if e.symbols[0].Equal(inputrep.InitLeft()) && e.symbols[len(e.symbols)-1].Equal(inputrep.InitRight()) {
 		e.symbols = e.symbols[1 : len(e.symbols)-1]
 	}
@@ -73,6 +78,17 @@ func (e Element) Equal(other Element) bool {
 	}
 	for i := 0; i < len(e.symbols); i++ {
 		isEqual = isEqual && e.symbols[i].Equal(other.symbols[i])
+	}
+	return isEqual
+}
+
+func sliceElementEqual(vec1 []Element, vec2 []Element) bool {
+	isEqual := true
+	if len(vec1) != len(vec2) {
+		return false
+	}
+	for i := 0; i < len(vec1); i++ {
+		isEqual = isEqual && vec1[i].Equal(vec2[i])
 	}
 	return isEqual
 }

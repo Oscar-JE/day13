@@ -1,5 +1,9 @@
 package inputrep
 
+import (
+	"strconv"
+)
+
 type InputRep struct {
 	isLeft  bool
 	isRight bool
@@ -36,4 +40,45 @@ func InitNumber(number int) InputRep {
 
 func (i InputRep) Equal(other InputRep) bool {
 	return i.isLeft == other.isLeft && i.isRight == other.isRight && i.value == other.value
+}
+
+func ParseToInputRep(line string) []InputRep {
+	representation := []InputRep{}
+	numberBuffer := ""
+	for index := range line {
+		if line[index] == '[' {
+			representation = append(representation, InitLeft())
+		} else if line[index] == ']' {
+			if numberBuffer != "" {
+				value, errorConv := strconv.Atoi(numberBuffer)
+				if errorConv != nil {
+					panic("parsing error")
+				}
+				representation = append(representation, InitNumber(value))
+				numberBuffer = ""
+			}
+			representation = append(representation, InitRight())
+		} else if line[index] == ',' {
+			if numberBuffer != "" {
+				representation = appendNumber(representation, numberBuffer)
+				numberBuffer = ""
+			}
+		} else { // här har vi ett fel
+			numberBuffer += string(line[index])
+		}
+	}
+	if numberBuffer != "" {
+		representation = appendNumber(representation, numberBuffer)
+		numberBuffer = ""
+	}
+	return representation
+}
+
+func appendNumber(representation []InputRep, numberBuffer string) []InputRep {
+	value, errorConv := strconv.Atoi(numberBuffer)
+	if errorConv != nil {
+		panic("parsing error")
+	}
+	representation = append(representation, InitNumber(value))
+	return representation
 }
