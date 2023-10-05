@@ -12,7 +12,7 @@ func PairsInOrder(first string, second string) bool {
 }
 
 func inOrder(first element.Element , second element.Element) bool {
-	if second.IsEmpty() {
+	if second.IsEmpty() { // kan problemt ligga ilist jämförelsen ? 
 		if first.IsEmpty() {
 			return true
 		} else {
@@ -20,11 +20,7 @@ func inOrder(first element.Element , second element.Element) bool {
 		}
 	}
 	if first.IsEmpty() {
-		if second.IsEmpty() {
-			return true
-		} else {
-			return true
-		}
+		return true
 	}
 	if first.IsNumber() && second.IsNumber() {
 		return first.NumberCompare(second)
@@ -40,7 +36,7 @@ func inOrder(first element.Element , second element.Element) bool {
 		return inOrder(first, second)
 	}
 
-	subElemensFirst := first.DivideIntoElements()
+	subElemensFirst := first.DivideIntoElements() // kan felet ligga här ? 
 	subElementsSecond := second.DivideIntoElements()
 
 	for i := 0; i < min(len(subElemensFirst), len(subElementsSecond)); i++ {

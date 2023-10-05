@@ -12,3 +12,7 @@ func TestPart1Short(t *testing.T) {
 		t.Errorf("Wrong result in part one short data , was %d , should be %d", sum, 13)
 	}
 }
+
+func TestMain(t *testing.T){ // enbart för debugg möjligheter
+	main()
+}
