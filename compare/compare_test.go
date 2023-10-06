@@ -91,3 +91,30 @@ func TestCompareSameVector(t *testing.T) {
 		t.Errorf("error in case same vector")
 	}
 }
+
+func TestFrånCC(t *testing.T) {
+	a := "[[1,1,1],2,3]"
+	b := "[[1,1,1]]"
+
+	if PairsInOrder(a, b) {
+		t.Errorf("shold be in determed to be in right order should be in wrong order")
+	}
+}
+
+func TestListorIListor(t *testing.T) {
+	if !PairsInOrder("[[[1]],1]", "[[1],2]") {
+		t.Errorf("wrong")
+	}
+
+	if PairsInOrder("[[[1]],2]", "[[1],1]") {
+		t.Errorf("wrong")
+	}
+
+	if !PairsInOrder("[[1],1]", "[[[1]],2]") {
+		t.Errorf("wrong")
+	}
+
+	if PairsInOrder("[[1],2]", "[[[1]],1]") {
+		t.Errorf("wrong")
+	}
+}
